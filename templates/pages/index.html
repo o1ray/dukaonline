@@ -1,0 +1,230 @@
+{% extends 'base.html' %} 
+
+{% load humanize %}
+
+{% block title %} | Welcome{% endblock %}
+
+{% block content %}
+
+<style>
+  .mySlides {display: none;}
+  .text {
+   color: #197fa4;
+   font-size: 15px;
+   padding: 8px 12px;
+   position: absolute;
+   bottom: 8px;
+   width: 100%;
+   text-align: center;
+ }
+  </style>
+ 
+ <!--End Slide  style Show contents- And below are slide show images --->
+ <div class="w3-content w3-section" style="max-width:100%">
+   <img class="mySlides" src="/static/img/Fried Chicken.PNG" style="height:50%">
+   <img class="mySlides" src="/static/img/Fish Sandwich.PNG" style="height:50%">
+   <img class="mySlides" src="/static/img/French Fries.PNG" style="height:50%">
+   <img class="mySlides" src="/static/img/Orange Juice.PNG" style="height:50%">
+   <img class="mySlides" src="/static/img/Onion Rings.PNG" style="height:50%">
+   <img class="mySlides" src="/static/img/Hamburger.png" style="height:50%">
+ 
+   <!-----<div class="text">
+     
+     <h1 style="font-size: 100px;"><b>Meki Telecom</b></h1>
+     <p  style="font-size: 50px;"><b>Where technology comes with human touch</b></p>
+ 
+ 
+   </div>
+   Slise Show java script-->
+   <script>
+     var myIndex = 0;
+     carousel();
+     
+     function carousel() {
+       var i;
+       var x = document.getElementsByClassName("mySlides");
+       for (i = 0; i < x.length; i++) {
+         x[i].style.display = "none";  
+       }
+       myIndex++;
+       if (myIndex > x.length) {myIndex = 1}    
+       x[myIndex-1].style.display = "block";  
+       setTimeout(carousel, 2000); // Change image every 2 seconds
+     }
+     </script>
+     <!--End slide show java script -->
+ </div>
+<!-- Showcase -->
+<section id="showcase" >
+  <div class="container text-center" >
+    <div class="home-search p-5" style="background-color:rgb(24, 140, 148);">
+      <div class="overlay p-5" style="background-color:rgb(24, 140, 148);">
+        <h1 class="display-4 mb-4">Food Search Just Got So Easy</h1>
+        <p class="lead">
+          Food Management is the operation, control, maintenance,
+          and oversight of real estate and physical property.
+        
+        </p>
+        <div class="search">
+          <form action="{% url 'search' %}">
+            <!-- Form Row 1 -->
+            <div class="form-row">
+              <div class="col-md-4 mb-3">
+                <label class="sr-only">Keywords</label>
+                <input
+                  type="text"
+                  name="keywords"
+                  class="form-control"
+                  placeholder="Keyword (Pool, Garage, etc)"
+                />
+              </div>
+
+              <div class="col-md-4 mb-3">
+                <label class="sr-only">City</label>
+                <input
+                  type="text"
+                  name="city"
+                  class="form-control"
+                  placeholder="City"
+                />
+              </div>
+
+              <div class="col-md-4 mb-3">
+                <label class="sr-only">State</label>
+                <select name="state" class="form-control">
+                  <option selected="true" disabled="disabled">State (All)</option>
+                  {% for key,value in state_choices.items %}
+                    <option value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <!-- Form Row 2 -->
+            <div class="form-row">
+             <!----<div class="col-md-6 mb-3">
+                <label class="sr-only">Bedrooms</label>
+                <select name="bedrooms" class="form-control">
+                    <option selected="true" disabled="disabled">Bedrooms (All)</option>
+                  {% for key,value in bedroom_choices.items %}
+                  <option value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>-->
+              <div class="col-md-6 mb-3">
+                <select name="price" class="form-control" id="type">
+                  <option selected="true" disabled="disabled"
+                    >Max Price (Any)</option
+                  >
+                  {% for key,value in price_choices.items %}
+                  <option value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <button class="btn  btn-block mt-4" type="submit" style="background-color: rgb(3, 58, 55);">
+              <font style="color:rgb(0, 225, 255) ;" >Submit Form</font>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<br>
+<!-- Alerts -->
+{% include 'partials/_alerts.html' %}
+
+<!-- Listings -->
+<section id="listings" class="py-5">
+  <div class="container">
+    <h3 class="text-center mb-3">Latest Listings</h3>
+    <div class="row">
+      {% if listings %}
+        {% for listing in listings %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card listing-preview">
+              <img class="card-img-top" src="{{ listing.photo_main.url }}" alt="" />
+              <div class="card-img-overlay">
+                <h2>
+                  <span class="badge badge-secondary text-white">Tsh/={{ listing.price | intcomma}}</span>
+                </h2>
+              </div>
+              <div class="card-body">
+                <div class="listing-heading text-center">
+                  <h4 class="text-primary">{{ listing.title }}</h4>
+                  <p>
+                    <i class="fas fa-map-marker text-secondary"></i> {{ listing.city }} {{ listing.state }},
+                    {{ listing.zipcode }}
+                  </p>
+                </div>
+                <hr />
+                <div class="row py-2 text-secondary">
+                  <div class="col-6">
+                    <i class="fas fa-motorcycle"></i> MotorCycle  {{ listing}}
+                  </div>
+                  <div class="col-6"><i class="fas fa-car"></i> Car Delivery {{ listing }}</div>
+                </div>
+               <!---- <div class="row py-2 text-secondary">
+                  <div class="col-6"><i class="fas fa-bed"></i> Bedrooms: {{ listing.bedrooms }}</div>
+                  <div class="col-6"><i class="fas fa-bath"></i> Bathrooms: {{ listing.bathrooms }}</div>
+                </div>-->
+                <hr />
+                <div class="row py-2 text-secondary">
+                  <div class="col-6"><i class="fas fa-user"></i> {{ listing.saler }}</div>
+                  <i class="fas fa-clock"></i> {{ listing.list_date | timesince }}
+                </div>
+                
+                <hr />
+                <a href="{% url 'listing' listing.id %}" class="btn btn-primary btn-block"
+                  >More Info</a
+                >
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-md-12">
+          <p>No listings available</p>
+        </div>
+      {% endif %}
+</section>
+
+
+<section id="" class="py-5 text-white" style="background-color:rgb(14, 145, 165);">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-4">
+        <i class="fas fa-user fa-4x mr-4"  style="color: rgb(99, 19, 19);"></i>
+        <hr />
+        <h3>Reach Us</h3>
+        <p>
+          Duka Online <b style="color:rgb(99, 19, 19) ;">Internet Services Providers</b> is bringing world at your fingertip with several solution 
+          including website design and hosting, email,pc maintenance, data storage, 
+          data recovery, software installation, and android and IoS applications.
+        </p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-motorcycle fa-4x mr-4"  style="color: rgb(99, 19, 19);"></i>
+        <hr />
+        <h3>Food Delivery</h3>
+        <p>
+           Duka Online We have qualified personnel in BTS installation (2G,3G,4G and 5G), 
+          microwave link installation,
+           Point to Point link installation and troubleshooting,
+           Network planning and Optimization
+        </p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-phone fa-4x mr-4"  style="color: rgb(99, 19, 19);"></i>
+        <hr />
+        <h3>Make Order </h3>
+        <p>
+          Duka Online  is bringing world at your fingertip with several solution
+          including website design and hosting, email,pc maintenance,
+           data storage, data recovery, software installation,  and android and IoS application.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
